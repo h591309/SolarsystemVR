@@ -1,9 +1,9 @@
 "use strict";
 
 import { PerspectiveCamera, Scene, WebGLRenderer } from "./build/three.module.js";
-import FlyControls from "./FlyControls.js";
 import SolarSystem from "./solarSystem.js";
 import CameraController from "./CameraController.js";
+import { VRButton } from "./build/VRButton.js";
 
 export default class App {
         constructor() {
@@ -38,12 +38,16 @@ export default class App {
             this.cameraController = new CameraController(this.camera, this.solarSystem.planets);
 
             //this.controller = new FlyControls(this.camera, canvas);
+            document.body.append(VRButton.createButton(this.renderer)); 
+            this.renderer.xr.enabled = true;
+
+            this.renderer.setAnimationLoop(this.render.bind(this));
             this.render();
         }
 
         render() {
             this.renderer.render(this.scene, this.camera);
-            window.requestAnimationFrame(this.render.bind(this));
+            //window.requestAnimationFrame(this.render.bind(this));
             this.solarSystem.animate();
             this.cameraController.animate();
            // this.controller.update();

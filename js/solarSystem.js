@@ -63,6 +63,7 @@ export default class SolarSystem {
         });
         
         this.sun = new Mesh(sunGeometry, sunBasicMaterial);
+        this.sun.position.z = -50;
         scene.add(this.sun);
 
         /**
