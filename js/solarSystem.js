@@ -92,10 +92,12 @@ export default class SolarSystem {
         ]);
         
         const skyboxGeometry = new BoxGeometry(5000, 5000, 5000);
+
         const skyboxMaterial = new MeshBasicMaterial({
-            side: BackSide,
-            envMap: skyboxTexture
+            envMap: skyboxTexture,
+            side: BackSide
         });
+
         this.skybox = new Mesh(skyboxGeometry, skyboxMaterial);
         scene.add(this.skybox);
 
