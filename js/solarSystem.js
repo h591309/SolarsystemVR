@@ -1,6 +1,6 @@
 "use strict";
 
-import { AmbientLight, Color, Mesh, MeshBasicMaterial, MeshPhongMaterial, Object3D, PointLight, SphereGeometry, TextureLoader, TorusGeometry, Vector3 } from "./build/three.module.js";
+import { AmbientLight, BoxGeometry, Color, Mesh, MeshBasicMaterial, MeshPhongMaterial, Object3D, PointLight, SphereGeometry, TextureLoader, TorusGeometry, Vector3, CubeTextureLoader, BackSide, MeshStandardMaterial, DoubleSide, FrontSide } from "./build/three.module.js";
 import SimpleColorMaterial from "./simpleColorMaterial.js";
 
 export default class SolarSystem {
@@ -8,6 +8,7 @@ export default class SolarSystem {
         let radius = 5;
         let widthSegments = 64;
         let heightSegments = 64;
+        this.camera = camera;
 
         let sunConfig = {
             radius: 5
@@ -46,6 +47,7 @@ export default class SolarSystem {
         /**
          * SUN
          */
+
         let sunGeometry = new SphereGeometry(sunConfig.radius, widthSegments, heightSegments);
         
         let sunTextureUrl = 'assets/texture_sun.jpg';
@@ -65,6 +67,37 @@ export default class SolarSystem {
         this.sun = new Mesh(sunGeometry, sunBasicMaterial);
         this.sun.position.z = -50;
         scene.add(this.sun);
+
+       
+
+        /*
+        const loader = new CubeTextureLoader();
+        const skyboxTexture = loader.load([
+            'assets/skybox/px.png',
+            'assets/skybox/nx.png',
+            'assets/skybox/py.png',
+            'assets/skybox/ny.png',
+            'assets/skybox/pz.png',
+            'assets/skybox/nz.png'
+        ]);
+        */
+
+        let loader = new CubeTextureLoader();
+        loader.setPath( 'assets/skybox/' );
+
+        let skyboxTexture = loader.load([
+            'px.png', 'nx.png',
+            'py.png', 'ny.png',
+            'pz.png', 'nz.png'
+        ]);
+        
+        const skyboxGeometry = new BoxGeometry(5000, 5000, 5000);
+        const skyboxMaterial = new MeshBasicMaterial({
+            side: BackSide,
+            envMap: skyboxTexture
+        });
+        this.skybox = new Mesh(skyboxGeometry, skyboxMaterial);
+        scene.add(this.skybox);
 
         /**
          * EARTH
@@ -206,12 +239,12 @@ export default class SolarSystem {
 
         this.planets = {
             sun: this.sun,
-            earth: this.earth,
+            earth: this.earthOrbitNode,
             moon: this.moon,
             mars: this.mars,
             jupiter: this.jupiter,
             venus: this.venus,
-            saturn: this.saturn,
+            saturn: this.saturn
         };
     }
 
@@ -224,6 +257,11 @@ export default class SolarSystem {
     }
 
     animate() {
+
+        this.skybox.position.copy(this.camera.position);
+        this.skybox.position.y = this.camera.position.y+2000;
+        this.skybox.rotation.copy(this.camera.rotation)
+
         /**
          * SUN ROTATION
          */

@@ -88,7 +88,6 @@ export default class CameraController {
         document.addEventListener('keyup', (e) => {
             e = e || window.event;
 
-            this.planetsArr[this.currentPlanet].add(this.camera);
             if(e.key === "w") {
                 this.cameraMovement.forward = 0;
             }
@@ -123,6 +122,7 @@ export default class CameraController {
     };
 
     animate() {
+        this.camera.lookAt(this.planets.sun.position);
         let now = Date.now();
         let delta = now - this.lastUpdate;
         this.lastUpdate = now;

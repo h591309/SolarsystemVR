@@ -13,7 +13,7 @@ export default class App {
 
             this.fov = 100;
             this.near = 0.1;
-            this.far = 1000;
+            this.far = 5000;
 
             this.camera = new PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
 
@@ -48,8 +48,8 @@ export default class App {
         render() {
             this.renderer.render(this.scene, this.camera);
             //window.requestAnimationFrame(this.render.bind(this));
-            this.solarSystem.animate();
             this.cameraController.animate();
+            this.solarSystem.animate();
            // this.controller.update();
         }
 }
